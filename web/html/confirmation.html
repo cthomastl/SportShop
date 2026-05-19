@@ -8,89 +8,101 @@
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">🏆 SportShop</a>
-    <nav>
-      <a href="index.html">Shop</a>
-      <a href="cart.html" class="cart-link">
-        🛒 Cart
-        <span class="cart-badge" id="cart-badge">0</span>
-      </a>
-    </nav>
+<div class="util-bar">
+  <div class="util-left">
+    <span>(555) 867-5309</span>
+    <span class="util-sep">|</span>
+    <a href="#">Email Us</a>
+    <span class="util-sep">|</span>
+    <a href="#">Log In</a>
   </div>
-</header>
-
-<main>
-  <div id="confirmation-loading" style="text-align:center;padding:4rem;color:var(--text-muted);">
-    Loading your order…
+  <div>
+    <a href="cart.html" class="cart-header-link">VIEW CART (<span id="cart-badge">0</span> items)</a>
   </div>
+</div>
 
-  <div id="confirmation-error" class="empty-state" style="display:none;">
-    <div class="empty-icon">⚠️</div>
-    <h3>Could not load order</h3>
-    <p id="confirmation-error-msg"></p>
-    <a href="index.html" class="btn btn-primary" style="margin-top:1rem;">Go to Shop</a>
-  </div>
-
-  <div id="confirmation-card" class="confirmation-card" style="display:none;">
-    <div class="confirmation-icon">🎉</div>
-    <h2>Order Confirmed!</h2>
-    <p>Thank you for your purchase. Your order has been received and is being processed.</p>
-
-    <div class="order-details">
-      <div class="detail-row">
-        <span class="detail-label">Order ID</span>
-        <span class="detail-value" id="conf-order-id"></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Customer</span>
-        <span class="detail-value" id="conf-customer-name"></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Email</span>
-        <span class="detail-value" id="conf-customer-email"></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Status</span>
-        <span class="detail-value" id="conf-status"></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Date</span>
-        <span class="detail-value" id="conf-date"></span>
-      </div>
+<div class="site-header">
+  <div class="site-header-inner">
+    <a href="index.html" class="logo">SPORT<span>SHOP</span></a>
+    <div class="search-wrap">
+      <input type="text" class="search-input" placeholder="Search products...">
+      <button class="search-btn">&#128269; Search</button>
     </div>
+    <div class="header-btns">
+      <a href="cart.html" class="hdr-btn">CART</a>
+      <a href="cart.html" class="hdr-btn hdr-btn-secondary">ORDER HISTORY</a>
+    </div>
+  </div>
+</div>
 
-    <div class="order-items-list">
-      <h4>Items Ordered</h4>
+<div class="browse-bar">&#9776; BROWSE CATALOG</div>
+
+<div class="fw-page">
+  <div class="page-title">Order Confirmation</div>
+
+  <div id="conf-loading" style="color:#888;font-style:italic;padding:20px 0;">Loading your order&hellip;</div>
+
+  <div id="conf-error" style="display:none;">
+    <div class="empty-msg">
+      <div class="big-icon">&#9888;&#65039;</div>
+      <h3>Could not load order</h3>
+      <p id="conf-error-msg"></p>
+      <a href="index.html" class="btn btn-green">Go to Shop</a>
+    </div>
+  </div>
+
+  <div id="conf-wrap" style="display:none;">
+    <div class="success-banner">
+      <strong>Your order has been placed successfully!</strong>
+      Thank you for shopping at SportShop. Your order is confirmed and being processed.
+    </div>
+    <div class="conf-box">
+      <div class="conf-box-head">Order Details</div>
+      <div class="conf-detail-row">
+        <span class="conf-detail-label">Order ID</span>
+        <span class="conf-detail-val" id="conf-order-id"></span>
+      </div>
+      <div class="conf-detail-row">
+        <span class="conf-detail-label">Customer</span>
+        <span class="conf-detail-val" id="conf-customer-name"></span>
+      </div>
+      <div class="conf-detail-row">
+        <span class="conf-detail-label">Email</span>
+        <span class="conf-detail-val" id="conf-customer-email"></span>
+      </div>
+      <div class="conf-detail-row">
+        <span class="conf-detail-label">Status</span>
+        <span class="conf-detail-val" id="conf-status"></span>
+      </div>
+      <div class="conf-detail-row">
+        <span class="conf-detail-label">Date</span>
+        <span class="conf-detail-val" id="conf-date"></span>
+      </div>
+      <div class="conf-items-head">Items Ordered</div>
       <div id="conf-items"></div>
-      <div class="order-item-row" style="font-weight:700;margin-top:0.5rem;border-top:2px solid var(--border);padding-top:0.5rem;">
-        <span>Total</span>
+      <div class="conf-total-row">
+        <span>TOTAL</span>
         <span id="conf-total"></span>
       </div>
-    </div>
-
-    <div class="confirmation-actions">
-      <a href="index.html" class="btn btn-primary">Continue Shopping</a>
+      <div class="conf-actions">
+        <a href="index.html" class="btn btn-green">Continue Shopping</a>
+      </div>
     </div>
   </div>
-</main>
+</div>
 
-<footer>© 2025 SportShop. All rights reserved.</footer>
+<footer>&copy; 2025 SportShop &mdash; All rights reserved.</footer>
 
 <script src="js/cart.js"></script>
 <script src="js/api.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
   const orderId = sessionStorage.getItem('lastOrderId');
-  const loadingEl = document.getElementById('confirmation-loading');
-  const errorEl = document.getElementById('confirmation-error');
-  const cardEl = document.getElementById('confirmation-card');
 
   function showError(msg) {
-    loadingEl.style.display = 'none';
-    errorEl.style.display = '';
-    document.getElementById('confirmation-error-msg').textContent = msg;
+    document.getElementById('conf-loading').style.display = 'none';
+    document.getElementById('conf-error').style.display = '';
+    document.getElementById('conf-error-msg').textContent = msg;
   }
 
   if (!orderId) {
@@ -100,39 +112,36 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     const order = await apiFetch('/orders/' + orderId);
-    loadingEl.style.display = 'none';
-    cardEl.style.display = '';
+    document.getElementById('conf-loading').style.display = 'none';
+    document.getElementById('conf-wrap').style.display = '';
 
     document.getElementById('conf-order-id').textContent = '#' + order.id;
     document.getElementById('conf-customer-name').textContent = order.customerName;
     document.getElementById('conf-customer-email').textContent = order.customerEmail;
     document.getElementById('conf-status').innerHTML =
-      `<span class="status-badge status-confirmed">${order.status}</span>`;
-
-    const date = order.createdAt
+      `<span class="conf-status-ok">${order.status}</span>`;
+    document.getElementById('conf-date').textContent = order.createdAt
       ? new Date(order.createdAt).toLocaleString()
       : 'Just now';
-    document.getElementById('conf-date').textContent = date;
 
     const itemsEl = document.getElementById('conf-items');
     if (order.items && order.items.length > 0) {
       itemsEl.innerHTML = order.items.map(item => `
-        <div class="order-item-row">
-          <span>${esc(item.productName)} <span style="color:var(--text-muted);font-size:0.82rem;">× ${item.quantity}</span></span>
-          <span style="font-weight:600;">$${(parseFloat(item.unitPrice) * item.quantity).toFixed(2)}</span>
+        <div class="conf-item-row">
+          <span>${esc(item.productName)} <span style="color:#888;">&times; ${item.quantity}</span></span>
+          <span style="font-weight:bold;">$${(parseFloat(item.unitPrice) * item.quantity).toFixed(2)}</span>
         </div>`).join('');
     } else {
-      itemsEl.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:0.5rem 0;">No item details available.</div>';
+      itemsEl.innerHTML = '<div style="padding:6px 14px;color:#888;font-size:11px;">No item details available.</div>';
     }
 
     document.getElementById('conf-total').textContent = '$' + parseFloat(order.totalAmount).toFixed(2);
-
   } catch (err) {
-    showError('Failed to load order details: ' + err.message);
+    showError('Failed to load order: ' + err.message);
   }
 
   function esc(str) {
-    return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 });
 </script>

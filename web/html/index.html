@@ -3,33 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SportShop – Gear Up</title>
+  <title>SportShop – Sporting Goods</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">🏆 SportShop</a>
-    <nav>
-      <a href="index.html" class="active">Shop</a>
-      <a href="cart.html" class="cart-link">
-        🛒 Cart
-        <span class="cart-badge" id="cart-badge">0</span>
-      </a>
-    </nav>
+<div class="util-bar">
+  <div class="util-left">
+    <span>(555) 867-5309</span>
+    <span class="util-sep">|</span>
+    <a href="#">Email Us</a>
+    <span class="util-sep">|</span>
+    <a href="#">Log In</a>
   </div>
-</header>
-
-<main>
-  <h1 class="page-title">Sporting Goods</h1>
-  <div class="filters" id="category-filters"></div>
-  <div id="product-grid">
-    <div class="loading">Loading products…</div>
+  <div>
+    <a href="cart.html" class="cart-header-link">VIEW CART (<span id="cart-badge">0</span> items)</a>
   </div>
-</main>
+</div>
 
-<footer>© 2025 SportShop. All rights reserved.</footer>
+<div class="site-header">
+  <div class="site-header-inner">
+    <a href="index.html" class="logo">SPORT<span>SHOP</span></a>
+    <div class="search-wrap">
+      <input type="text" id="search-input" class="search-input" placeholder="Search products...">
+      <button class="search-btn" id="search-btn">&#128269; Search</button>
+    </div>
+    <div class="header-btns">
+      <a href="cart.html" class="hdr-btn">CART</a>
+      <a href="cart.html" class="hdr-btn hdr-btn-secondary">ORDER HISTORY</a>
+    </div>
+  </div>
+</div>
+
+<div class="browse-bar">&#9776; BROWSE CATALOG</div>
+
+<div class="page-body">
+  <aside class="sidebar">
+    <div class="sidebar-head">Choose a Category</div>
+    <div id="sidebar-categories"></div>
+  </aside>
+  <div class="page-content">
+    <div class="cat-breadcrumb" id="cat-breadcrumb">All Categories</div>
+    <div class="section-head" id="section-head">All Products</div>
+    <div id="product-grid">
+      <div class="grid-loading">Loading products&hellip;</div>
+    </div>
+  </div>
+</div>
+
+<footer>&copy; 2025 SportShop &mdash; All rights reserved. &nbsp;|&nbsp; Sporting Goods for Everyone.</footer>
 
 <script src="js/cart.js"></script>
 <script src="js/api.js"></script>

@@ -8,25 +8,41 @@
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">🏆 SportShop</a>
-    <nav>
-      <a href="index.html">Shop</a>
-      <a href="cart.html" class="cart-link active">
-        🛒 Cart
-        <span class="cart-badge" id="cart-badge">0</span>
-      </a>
-    </nav>
+<div class="util-bar">
+  <div class="util-left">
+    <span>(555) 867-5309</span>
+    <span class="util-sep">|</span>
+    <a href="#">Email Us</a>
+    <span class="util-sep">|</span>
+    <a href="#">Log In</a>
   </div>
-</header>
+  <div>
+    <a href="cart.html" class="cart-header-link">VIEW CART (<span id="cart-badge">0</span> items)</a>
+  </div>
+</div>
 
-<main>
-  <h1 class="page-title">Your Cart</h1>
+<div class="site-header">
+  <div class="site-header-inner">
+    <a href="index.html" class="logo">SPORT<span>SHOP</span></a>
+    <div class="search-wrap">
+      <input type="text" class="search-input" placeholder="Search products...">
+      <button class="search-btn">&#128269; Search</button>
+    </div>
+    <div class="header-btns">
+      <a href="cart.html" class="hdr-btn">CART</a>
+      <a href="cart.html" class="hdr-btn hdr-btn-secondary">ORDER HISTORY</a>
+    </div>
+  </div>
+</div>
+
+<div class="browse-bar">&#9776; BROWSE CATALOG</div>
+
+<div class="fw-page">
+  <div class="page-title">Your Shopping Cart</div>
   <div id="cart-content"></div>
-</main>
+</div>
 
-<footer>© 2025 SportShop. All rights reserved.</footer>
+<footer>&copy; 2025 SportShop &mdash; All rights reserved.</footer>
 
 <script src="js/cart.js"></script>
 <script>
@@ -39,11 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (items.length === 0) {
       el.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">🛒</div>
+        <div class="empty-msg">
+          <div class="big-icon">&#128722;</div>
           <h3>Your cart is empty</h3>
-          <p>Add some items from the shop to get started.</p>
-          <a href="index.html" class="btn btn-primary" style="margin-top:1rem;">Browse Products</a>
+          <p>Browse our catalog to find sporting goods.</p>
+          <a href="index.html" class="btn btn-green">Browse Products</a>
         </div>`;
       return;
     }
@@ -53,55 +69,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
     el.innerHTML = `
       <div class="cart-layout">
-        <div>
-          <table class="cart-table">
+        <div class="cart-main">
+          <table class="data-table">
             <thead>
               <tr>
                 <th>Item</th>
-                <th>Price</th>
+                <th>Unit Price</th>
                 <th>Quantity</th>
                 <th class="text-right">Subtotal</th>
                 <th></th>
               </tr>
             </thead>
-            <tbody id="cart-tbody">
+            <tbody>
               ${items.map(i => `
                 <tr data-id="${i.productId}">
                   <td>
-                    <div class="cart-item-name">
-                      <span class="cart-item-emoji">${i.emoji}</span>
+                    <div class="item-cell">
+                      <span class="item-emoji">${i.emoji}</span>
                       <div>
-                        <div style="font-weight:600">${esc(i.name)}</div>
-                        <div style="font-size:0.75rem;color:var(--text-muted)">${esc(i.category)}</div>
+                        <div class="item-info-name">${esc(i.name)}</div>
+                        <div class="item-info-cat">${esc(i.category)}</div>
                       </div>
                     </div>
                   </td>
                   <td>$${i.price.toFixed(2)}</td>
                   <td>
-                    <div class="qty-controls">
-                      <button class="qty-minus" data-id="${i.productId}">−</button>
-                      <span class="qty-value">${i.quantity}</span>
-                      <button class="qty-plus" data-id="${i.productId}">+</button>
+                    <div class="qty-box">
+                      <button class="qty-btn qty-minus" data-id="${i.productId}">&#8722;</button>
+                      <span class="qty-val">${i.quantity}</span>
+                      <button class="qty-btn qty-plus" data-id="${i.productId}">+</button>
                     </div>
                   </td>
-                  <td class="text-right">$${(i.price * i.quantity).toFixed(2)}</td>
-                  <td>
-                    <button class="btn btn-danger remove-item" data-id="${i.productId}" title="Remove">✕</button>
-                  </td>
+                  <td class="text-right" style="font-weight:bold;">$${(i.price * i.quantity).toFixed(2)}</td>
+                  <td><button class="btn-del remove-item" data-id="${i.productId}" title="Remove">&times;</button></td>
                 </tr>`).join('')}
             </tbody>
           </table>
-          <div style="margin-top:1rem;">
-            <a href="index.html" class="btn btn-outline">← Continue Shopping</a>
+          <div class="cart-actions">
+            <a href="index.html" class="btn">&laquo; Continue Shopping</a>
+            <button id="clear-cart" class="btn" style="margin-left:auto;">Clear Cart</button>
           </div>
         </div>
-        <div class="cart-summary">
-          <h3>Order Summary</h3>
-          <div class="summary-row"><span>${itemCount} item${itemCount !== 1 ? 's' : ''}</span><span>$${total.toFixed(2)}</span></div>
-          <div class="summary-row"><span>Shipping</span><span>Free</span></div>
-          <div class="summary-row total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
-          <a href="checkout.html" class="btn btn-accent">Proceed to Checkout →</a>
-          <button id="clear-cart" class="btn btn-outline" style="margin-top:0.5rem;font-size:0.8rem;">Clear Cart</button>
+        <div class="order-box">
+          <div class="order-box-head">Order Summary</div>
+          <div class="sum-row">
+            <span>${itemCount} item${itemCount !== 1 ? 's' : ''}</span>
+            <span>$${total.toFixed(2)}</span>
+          </div>
+          <div class="sum-row">
+            <span>Shipping</span>
+            <span style="color:#1a5a1a;font-weight:bold;">FREE</span>
+          </div>
+          <div class="sum-total">
+            <span>TOTAL</span>
+            <span>$${total.toFixed(2)}</span>
+          </div>
+          <div class="order-box-btns">
+            <a href="checkout.html" class="btn btn-green">Proceed to Checkout &rsaquo;</a>
+          </div>
         </div>
       </div>`;
 
@@ -139,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function esc(str) {
-    return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 });
 </script>

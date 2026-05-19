@@ -8,57 +8,75 @@
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">🏆 SportShop</a>
-    <nav>
-      <a href="index.html">Shop</a>
-      <a href="cart.html" class="cart-link">
-        🛒 Cart
-        <span class="cart-badge" id="cart-badge">0</span>
-      </a>
-    </nav>
+<div class="util-bar">
+  <div class="util-left">
+    <span>(555) 867-5309</span>
+    <span class="util-sep">|</span>
+    <a href="#">Email Us</a>
+    <span class="util-sep">|</span>
+    <a href="#">Log In</a>
   </div>
-</header>
+  <div>
+    <a href="cart.html" class="cart-header-link">VIEW CART (<span id="cart-badge">0</span> items)</a>
+  </div>
+</div>
 
-<main>
-  <h1 class="page-title">Checkout</h1>
+<div class="site-header">
+  <div class="site-header-inner">
+    <a href="index.html" class="logo">SPORT<span>SHOP</span></a>
+    <div class="search-wrap">
+      <input type="text" class="search-input" placeholder="Search products...">
+      <button class="search-btn">&#128269; Search</button>
+    </div>
+    <div class="header-btns">
+      <a href="cart.html" class="hdr-btn">CART</a>
+      <a href="cart.html" class="hdr-btn hdr-btn-secondary">ORDER HISTORY</a>
+    </div>
+  </div>
+</div>
+
+<div class="browse-bar">&#9776; BROWSE CATALOG</div>
+
+<div class="fw-page">
+  <div class="page-title">Checkout</div>
   <div class="checkout-layout">
 
-    <div class="form-card">
-      <h2>Your Information</h2>
-      <div id="form-alert" class="alert alert-error"></div>
+    <div class="form-section">
+      <div class="form-section-title">Customer Information</div>
+      <div id="form-alert" class="alert-error"></div>
       <form id="checkout-form" novalidate>
-        <div class="form-group">
-          <label for="customer-name">Full Name</label>
+        <div class="form-row">
+          <label for="customer-name">Full Name *</label>
           <input type="text" id="customer-name" placeholder="Jane Smith" autocomplete="name">
-          <div class="field-error" id="name-error"></div>
+          <div class="field-err" id="name-error"></div>
         </div>
-        <div class="form-group">
-          <label for="customer-email">Email Address</label>
+        <div class="form-row">
+          <label for="customer-email">Email Address *</label>
           <input type="email" id="customer-email" placeholder="jane@example.com" autocomplete="email">
-          <div class="field-error" id="email-error"></div>
+          <div class="field-err" id="email-error"></div>
         </div>
-        <button type="submit" class="btn btn-accent" id="submit-btn" style="width:100%;margin-top:0.5rem;padding:0.75rem;">
-          Place Order
-        </button>
-        <a href="cart.html" class="btn btn-outline" style="width:100%;margin-top:0.5rem;">← Back to Cart</a>
+        <div class="form-btns">
+          <button type="submit" class="btn btn-green" id="submit-btn" style="padding:8px 20px;font-size:13px;">
+            Place Order
+          </button>
+          <a href="cart.html" class="btn" style="text-align:center;">&laquo; Back to Cart</a>
+        </div>
       </form>
     </div>
 
-    <div class="order-preview">
-      <h3>Order Summary</h3>
+    <div class="preview-box">
+      <div class="preview-box-head">Order Summary</div>
       <div id="order-preview-items"></div>
       <div class="preview-total">
-        <span>Total</span>
+        <span>TOTAL</span>
         <span id="order-preview-total">$0.00</span>
       </div>
     </div>
 
   </div>
-</main>
+</div>
 
-<footer>© 2025 SportShop. All rights reserved.</footer>
+<footer>&copy; 2025 SportShop &mdash; All rights reserved.</footer>
 
 <script src="js/cart.js"></script>
 <script src="js/api.js"></script>
