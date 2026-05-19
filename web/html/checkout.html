@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout – SportShop</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">🏆 SportShop</a>
+    <nav>
+      <a href="index.html">Shop</a>
+      <a href="cart.html" class="cart-link">
+        🛒 Cart
+        <span class="cart-badge" id="cart-badge">0</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1 class="page-title">Checkout</h1>
+  <div class="checkout-layout">
+
+    <div class="form-card">
+      <h2>Your Information</h2>
+      <div id="form-alert" class="alert alert-error"></div>
+      <form id="checkout-form" novalidate>
+        <div class="form-group">
+          <label for="customer-name">Full Name</label>
+          <input type="text" id="customer-name" placeholder="Jane Smith" autocomplete="name">
+          <div class="field-error" id="name-error"></div>
+        </div>
+        <div class="form-group">
+          <label for="customer-email">Email Address</label>
+          <input type="email" id="customer-email" placeholder="jane@example.com" autocomplete="email">
+          <div class="field-error" id="email-error"></div>
+        </div>
+        <button type="submit" class="btn btn-accent" id="submit-btn" style="width:100%;margin-top:0.5rem;padding:0.75rem;">
+          Place Order
+        </button>
+        <a href="cart.html" class="btn btn-outline" style="width:100%;margin-top:0.5rem;">← Back to Cart</a>
+      </form>
+    </div>
+
+    <div class="order-preview">
+      <h3>Order Summary</h3>
+      <div id="order-preview-items"></div>
+      <div class="preview-total">
+        <span>Total</span>
+        <span id="order-preview-total">$0.00</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>© 2025 SportShop. All rights reserved.</footer>
+
+<script src="js/cart.js"></script>
+<script src="js/api.js"></script>
+<script src="js/checkout.js"></script>
+</body>
+</html>

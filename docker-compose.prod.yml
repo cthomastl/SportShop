@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./api
+    environment:
+      DB_URL: ${DB_URL}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8080:8080"
+    networks:
+      - sportshop_net
+    restart: unless-stopped
+
+  web:
+    build: ./web
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    networks:
+      - sportshop_net
+    restart: unless-stopped
+
+networks:
+  sportshop_net:
+    driver: bridge

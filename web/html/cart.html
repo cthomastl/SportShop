@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart – SportShop</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">🏆 SportShop</a>
+    <nav>
+      <a href="index.html">Shop</a>
+      <a href="cart.html" class="cart-link active">
+        🛒 Cart
+        <span class="cart-badge" id="cart-badge">0</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1 class="page-title">Your Cart</h1>
+  <div id="cart-content"></div>
+</main>
+
+<footer>© 2025 SportShop. All rights reserved.</footer>
+
+<script src="js/cart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  renderCart();
+
+  function renderCart() {
+    const items = Cart.get();
+    const el = document.getElementById('cart-content');
+
+    if (items.length === 0) {
+      el.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🛒</div>
+          <h3>Your cart is empty</h3>
+          <p>Add some items from the shop to get started.</p>
+          <a href="index.html" class="btn btn-primary" style="margin-top:1rem;">Browse Products</a>
+        </div>`;
+      return;
+    }
+
+    const total = Cart.getTotal();
+    const itemCount = Cart.getCount();
+
+    el.innerHTML = `
+      <div class="cart-layout">
+        <div>
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th class="text-right">Subtotal</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cart-tbody">
+              ${items.map(i => `
+                <tr data-id="${i.productId}">
+                  <td>
+                    <div class="cart-item-name">
+                      <span class="cart-item-emoji">${i.emoji}</span>
+                      <div>
+                        <div style="font-weight:600">${esc(i.name)}</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted)">${esc(i.category)}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>$${i.price.toFixed(2)}</td>
+                  <td>
+                    <div class="qty-controls">
+                      <button class="qty-minus" data-id="${i.productId}">−</button>
+                      <span class="qty-value">${i.quantity}</span>
+                      <button class="qty-plus" data-id="${i.productId}">+</button>
+                    </div>
+                  </td>
+                  <td class="text-right">$${(i.price * i.quantity).toFixed(2)}</td>
+                  <td>
+                    <button class="btn btn-danger remove-item" data-id="${i.productId}" title="Remove">✕</button>
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+          <div style="margin-top:1rem;">
+            <a href="index.html" class="btn btn-outline">← Continue Shopping</a>
+          </div>
+        </div>
+        <div class="cart-summary">
+          <h3>Order Summary</h3>
+          <div class="summary-row"><span>${itemCount} item${itemCount !== 1 ? 's' : ''}</span><span>$${total.toFixed(2)}</span></div>
+          <div class="summary-row"><span>Shipping</span><span>Free</span></div>
+          <div class="summary-row total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
+          <a href="checkout.html" class="btn btn-accent">Proceed to Checkout →</a>
+          <button id="clear-cart" class="btn btn-outline" style="margin-top:0.5rem;font-size:0.8rem;">Clear Cart</button>
+        </div>
+      </div>`;
+
+    document.querySelectorAll('.qty-minus').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = parseInt(btn.dataset.id);
+        const item = Cart.get().find(i => i.productId === id);
+        if (item) Cart.updateQty(id, item.quantity - 1);
+        renderCart();
+      });
+    });
+
+    document.querySelectorAll('.qty-plus').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = parseInt(btn.dataset.id);
+        const item = Cart.get().find(i => i.productId === id);
+        if (item) Cart.updateQty(id, item.quantity + 1);
+        renderCart();
+      });
+    });
+
+    document.querySelectorAll('.remove-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        Cart.removeItem(parseInt(btn.dataset.id));
+        renderCart();
+      });
+    });
+
+    document.getElementById('clear-cart').addEventListener('click', () => {
+      if (confirm('Remove all items from your cart?')) {
+        Cart.clear();
+        renderCart();
+      }
+    });
+  }
+
+  function esc(str) {
+    return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+});
+</script>
+</body>
+</html>

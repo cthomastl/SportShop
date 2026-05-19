@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: sportshop
+      POSTGRES_USER: sportshop
+      POSTGRES_PASSWORD: sportshop
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - sportshop_db_data:/var/lib/postgresql/data
+    networks:
+      - sportshop_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sportshop -d sportshop"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./api
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/sportshop
+      DB_USER: sportshop
+      DB_PASSWORD: sportshop
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - sportshop_net
+    restart: on-failure
+
+  web:
+    build: ./web
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    networks:
+      - sportshop_net
+
+volumes:
+  sportshop_db_data:
+
+networks:
+  sportshop_net:
+    driver: bridge

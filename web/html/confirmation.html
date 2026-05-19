@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed – SportShop</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">🏆 SportShop</a>
+    <nav>
+      <a href="index.html">Shop</a>
+      <a href="cart.html" class="cart-link">
+        🛒 Cart
+        <span class="cart-badge" id="cart-badge">0</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div id="confirmation-loading" style="text-align:center;padding:4rem;color:var(--text-muted);">
+    Loading your order…
+  </div>
+
+  <div id="confirmation-error" class="empty-state" style="display:none;">
+    <div class="empty-icon">⚠️</div>
+    <h3>Could not load order</h3>
+    <p id="confirmation-error-msg"></p>
+    <a href="index.html" class="btn btn-primary" style="margin-top:1rem;">Go to Shop</a>
+  </div>
+
+  <div id="confirmation-card" class="confirmation-card" style="display:none;">
+    <div class="confirmation-icon">🎉</div>
+    <h2>Order Confirmed!</h2>
+    <p>Thank you for your purchase. Your order has been received and is being processed.</p>
+
+    <div class="order-details">
+      <div class="detail-row">
+        <span class="detail-label">Order ID</span>
+        <span class="detail-value" id="conf-order-id"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Customer</span>
+        <span class="detail-value" id="conf-customer-name"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Email</span>
+        <span class="detail-value" id="conf-customer-email"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Status</span>
+        <span class="detail-value" id="conf-status"></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Date</span>
+        <span class="detail-value" id="conf-date"></span>
+      </div>
+    </div>
+
+    <div class="order-items-list">
+      <h4>Items Ordered</h4>
+      <div id="conf-items"></div>
+      <div class="order-item-row" style="font-weight:700;margin-top:0.5rem;border-top:2px solid var(--border);padding-top:0.5rem;">
+        <span>Total</span>
+        <span id="conf-total"></span>
+      </div>
+    </div>
+
+    <div class="confirmation-actions">
+      <a href="index.html" class="btn btn-primary">Continue Shopping</a>
+    </div>
+  </div>
+</main>
+
+<footer>© 2025 SportShop. All rights reserved.</footer>
+
+<script src="js/cart.js"></script>
+<script src="js/api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const orderId = sessionStorage.getItem('lastOrderId');
+  const loadingEl = document.getElementById('confirmation-loading');
+  const errorEl = document.getElementById('confirmation-error');
+  const cardEl = document.getElementById('confirmation-card');
+
+  function showError(msg) {
+    loadingEl.style.display = 'none';
+    errorEl.style.display = '';
+    document.getElementById('confirmation-error-msg').textContent = msg;
+  }
+
+  if (!orderId) {
+    showError('No recent order found. Please place an order first.');
+    return;
+  }
+
+  try {
+    const order = await apiFetch('/orders/' + orderId);
+    loadingEl.style.display = 'none';
+    cardEl.style.display = '';
+
+    document.getElementById('conf-order-id').textContent = '#' + order.id;
+    document.getElementById('conf-customer-name').textContent = order.customerName;
+    document.getElementById('conf-customer-email').textContent = order.customerEmail;
+    document.getElementById('conf-status').innerHTML =
+      `<span class="status-badge status-confirmed">${order.status}</span>`;
+
+    const date = order.createdAt
+      ? new Date(order.createdAt).toLocaleString()
+      : 'Just now';
+    document.getElementById('conf-date').textContent = date;
+
+    const itemsEl = document.getElementById('conf-items');
+    if (order.items && order.items.length > 0) {
+      itemsEl.innerHTML = order.items.map(item => `
+        <div class="order-item-row">
+          <span>${esc(item.productName)} <span style="color:var(--text-muted);font-size:0.82rem;">× ${item.quantity}</span></span>
+          <span style="font-weight:600;">$${(parseFloat(item.unitPrice) * item.quantity).toFixed(2)}</span>
+        </div>`).join('');
+    } else {
+      itemsEl.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:0.5rem 0;">No item details available.</div>';
+    }
+
+    document.getElementById('conf-total').textContent = '$' + parseFloat(order.totalAmount).toFixed(2);
+
+  } catch (err) {
+    showError('Failed to load order details: ' + err.message);
+  }
+
+  function esc(str) {
+    return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+});
+</script>
+</body>
+</html>
