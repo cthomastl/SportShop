@@ -1,0 +1,24 @@
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+
+# Docker compose overrides with hardcoded secrets
+docker-compose.prod.yml
+
+# Java build output
+api/target/
+
+# Node / frontend build output
+web/node_modules/
+web/dist/
+web/.next/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.iml
