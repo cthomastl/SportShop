@@ -4,7 +4,7 @@ services:
   api:
     build: ./api
     environment:
-      DB_URL: sportshop-db-01.czymaq4wobwh.us-east-2.rds.amazonaws.com
+      DB_URL: jdbc:postgresql://sportshop-db-01.czymaq4wobwh.us-east-2.rds.amazonaws.com:5432/sportshop?sslmode=require
       DB_USER: admin_user
       DB_PASSWORD: 1232123Ct
     ports:
