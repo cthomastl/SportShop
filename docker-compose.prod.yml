@@ -4,9 +4,9 @@ services:
   api:
     build: ./api
     environment:
-      DB_URL: ${DB_URL}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: sportshop-db-01.czymaq4wobwh.us-east-2.rds.amazonaws.com
+      DB_USER: admin_user
+      DB_PASSWORD: 1232123Ct
     ports:
       - "8080:8080"
     networks:
