@@ -1,0 +1,86 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  API_IMAGE: ghcr.io/${{ github.repository_owner }}/sportshop-api
+  WEB_IMAGE: ghcr.io/${{ github.repository_owner }}/sportshop-web
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-tag: ${{ steps.tag.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set image tag
+        id: tag
+        run: echo "version=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Build and push API image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./api
+          push: true
+          tags: |
+            ${{ env.API_IMAGE }}:${{ steps.tag.outputs.version }}
+            ${{ env.API_IMAGE }}:latest
+
+      - name: Build and push web image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./web
+          push: true
+          tags: |
+            ${{ env.WEB_IMAGE }}:${{ steps.tag.outputs.version }}
+            ${{ env.WEB_IMAGE }}:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-push
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
+
+      - name: Apply k8s manifests
+        run: kubectl apply -f k8s/
+
+      - name: Update API image
+        run: |
+          kubectl set image deployment/sportshop-api \
+            api=${{ env.API_IMAGE }}:${{ needs.build-push.outputs.image-tag }} \
+            -n sportshop
+
+      - name: Update web image
+        run: |
+          kubectl set image deployment/sportshop-web \
+            web=${{ env.WEB_IMAGE }}:${{ needs.build-push.outputs.image-tag }} \
+            -n sportshop
+
+      - name: Wait for rollout
+        run: |
+          kubectl rollout status deployment/sportshop-api -n sportshop --timeout=120s
+          kubectl rollout status deployment/sportshop-web -n sportshop --timeout=60s
